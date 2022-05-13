@@ -4,7 +4,7 @@
 
 サンプルの実行方法
 
-```javascript
+```shell
 node src/workspace/sample-level1.js
 ```
 
