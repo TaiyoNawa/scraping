@@ -3,16 +3,13 @@
 ## 使い方
 
 1. node.js のバージョンを設定
-   node v16.1.0 を使用します。  
-   ※ nodenv や ndenv を使用している場合、以下の手順
+   node v18.16.0 を使用します。
 
 ```shell
-nodenv install v16.1.0
-nodenv local v16.1.0
-node -v # v16.1.0
+node -v # v18.16.0
 ```
 
-2. モジュールのインストール
+1. モジュールのインストール
 
 ```shell
 yarn install
