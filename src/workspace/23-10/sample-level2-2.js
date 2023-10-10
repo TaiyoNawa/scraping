@@ -17,11 +17,11 @@ const fileName = 'sample-level2-2.csv';
     const document = parser.parse(html);
 
     const elements = document.querySelectorAll(
-      '.article_list'
+      '.content_sub_list_list'
     );
     const values = Array.from(elements).map((element) => {
   
-      const url = element.querySelector('a').getAttribute('href');
+      const url = 'https://org.ja-group.jp'+ element.querySelector('a').getAttribute('href');
       if (url !== '') {
         return {
           url

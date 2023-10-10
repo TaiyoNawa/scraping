@@ -11,7 +11,7 @@ const fileName = 'sample-ja.csv';
   try {
     //CSVファイル読み込み
     const data = await fs.readFileSync(
-      __dirname + '/output/sample-level2.csv',//dirnameは現在のディレクトリを表す
+      __dirname + '/output/sample-level2-2.csv',//dirnameは現在のディレクトリを表す
       'utf-8'
     );
     const records = parse.parse(data, {
@@ -28,16 +28,18 @@ const fileName = 'sample-ja.csv';
       const html = response.data;
       const document = parser.parse(html);
 
-      const elements = document.querySelectorAll('#main section');
+      const elements = document.querySelectorAll('.ja_name');
       Array.from(elements).map((element) => {
         let name, url;
-        name = element
-          .querySelector('h1')
-          .innerText.replace(/\n/g, '')
-          .replace(/\r/g, '');
-        if (element.querySelector('.lab_eyecatching_link a')) {
+        if (element.querySelector('a')) {
+            name = element
+            .querySelector('a')
+            .innerText;/* .replace(/\n/g, '')
+            .replace(/\r/g, ''); */
+        }
+        if (element.querySelector('a')) {
           url = element
-            .querySelector('.lab_eyecatching_link a')
+            .querySelector('a')
             .getAttribute('href');
         }
         if (name !== '') {
