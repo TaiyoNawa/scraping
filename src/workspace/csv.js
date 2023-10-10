@@ -11,12 +11,12 @@ const fileName = 'sample-labonavi.csv';
   try {
     //CSVファイル読み込み
     const data = await fs.readFileSync(
-      __dirname + '../../output/sample-level2.csv',//dirnameは現在のディレクトリを表す
+      __dirname + '/output/sample-level2.csv',//dirnameは現在のディレクトリを表す
       'utf-8'
     );
-    const records = parse.parse(data, {//recordsにCSVファイルが配列で入る
+    const records = parse.parse(data, {
       columns: true,
-    });
+    });//recordsにCSVファイルが配列で入る
 
     let results = [];
 
