@@ -2,7 +2,7 @@ const Axios = require('axios');
 const parser = require('node-html-parser');
 const path = require('path');
 const fs = require('fs');
-const toCsv = require('../lib/generateCsv');
+const toCsv = require('../src/lib/generateCsv');
 const parse = require('csv-parse/sync');
 
 const fileName = 'sample-labonavi.csv';
