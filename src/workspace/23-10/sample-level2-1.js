@@ -2,10 +2,10 @@ const Axios = require('axios');
 const parser = require('node-html-parser');
 const path = require('path');
 
-const toCsv = require('../lib/generateCsv');
+const toCsv = require('../../lib/generateCsv');
 
 const baseUrl = 'https://www.labnavi.info/category/%E7%90%86%E7%B3%BB/';
-const fileName = 'sample-level2.csv';
+const fileName = 'sample-level2-1.csv';
 
 (async () => {
   try {
