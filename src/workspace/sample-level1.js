@@ -4,8 +4,8 @@ const path = require('path');
 
 const toCsv = require('../lib/generateCsv');
 
-const baseUrl = 'http://www.photonext.jp/exhivition';
-const fileName = 'sample-level1.csv';
+const baseUrl = 'https://www.labnavi.info/category/%E7%90%86%E7%B3%BB/';
+const fileName = 'sample-level2.csv';
 
 (async () => {
   try {
@@ -17,17 +17,14 @@ const fileName = 'sample-level1.csv';
     const document = parser.parse(html);
 
     const elements = document.querySelectorAll(
-      '#Containerpocsb .font_8 span a'
+      '.article_list'
     );
     const values = Array.from(elements).map((element) => {
-      const name = element.innerText;
-      const url = element.getAttribute('href');
-      if (name !== '') {
+  
+      const url = element.querySelector('a').getAttribute('href');
+      if (url !== '') {
         return {
-          name,
-          url,
-          exhibitionName:
-            '10thAniversary PHOTONEXT2019 フォトグラファー&フォトビジネスフェア',
+          url
         };
       }
     });
