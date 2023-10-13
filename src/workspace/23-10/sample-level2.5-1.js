@@ -3,16 +3,16 @@ const parser = require('node-html-parser');
 const path = require('path');
 const toCsv = require('../../lib/generateCsv');
 
-const fileName = 'sample-level2.5-2.csv';
+const fileName = 'sample-level2.5-1.csv';
 
 let results = [];
 (async () => {
   try {
     //ページ数分ループ（2重）
     for(i = 11; i < 15; i++){
-    for (i = 1; i < 32; i++) {
+    for (j = 1; j < 32; j++) {
       // スクレイピングするサイトの読み込み
-      const baseUrl = `hhttps://beauty.hotpepper.jp/pre${i}/PN${j}/`;
+      const baseUrl = `https://beauty.hotpepper.jp/pre${i}/PN${j}/`;
       const response = await Axios({
         method: 'get',
         url: baseUrl,
@@ -20,15 +20,14 @@ let results = [];
       const html = response.data;
       const document = parser.parse(html);
 
-      // スクレイピング←手つけてない
       const elements = document.querySelectorAll(
-        '.result-header'
+        'h3.slnName'
       );
       Array.from(elements).map((element) => {
         let url
-        if(element.querySelector('.result__name')){
-            url = 'https://hospitalsfile.doctorsfile.jp' + element
-            .querySelector('.result__name')
+        if(element.querySelector('a')){
+            url = element
+            .querySelector('a')
             .getAttribute('href');
         }
         if (url !== '') {

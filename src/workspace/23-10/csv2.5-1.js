@@ -5,7 +5,7 @@ const fs = require('fs');
 const toCsv = require('../../lib/generateCsv');
 const parse = require('csv-parse/sync');
 
-const fileName = 'sample-hospitalsfile.csv';
+const fileName = 'sample-hotpeppersalon.csv';
 
 (async () => {
   try {
@@ -31,15 +31,15 @@ const fileName = 'sample-hospitalsfile.csv';
       const document = parser.parse(html);
 
       // スクレイピング
-      const elements = document.querySelectorAll('.hospital__box');
+      const elements = document.querySelectorAll('tr');
       Array.from(elements).map((element) => {
       let admin, tel, adrs, bed, holi, url;
-      if (element.querySelector('th').innerText) {
-            admin = element.querySelector('td').innerText;
+      if (element.querySelector('th').innerText === '電話番号') {
+            tel = element.querySelector('td').innerText;
         }
-        if (admin !== '') {
+        if (tel !== '') {
           results.push({
-            admin
+            tel
           });
         }
       });

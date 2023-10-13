@@ -21,7 +21,7 @@ const fileName = 'sample-hospitalsfile.csv';
     let results = [];
 
     //読み込むURL(件数)分ループさせる
-    for (i = 0; i < 2; i++) {
+    for (i = 0; i < 3; i++) {
       // スクレイピングするサイトの読み込み
       const response = await Axios({
         method: 'get',
@@ -31,18 +31,27 @@ const fileName = 'sample-hospitalsfile.csv';
       const document = parser.parse(html);
 
       // スクレイピング
-      const elements = document.querySelectorAll('.hospital__box');
+      const elements = document.querySelectorAll('.table-hospital');
       Array.from(elements).map((element) => {
       let admin, tel, adrs, bed, holi, url;
-      if (element.querySelector('th').innerText) {
+        if (element.querySelector('td').innerText && element.querySelector('th').innerText === '管理者'){
             admin = element.querySelector('td').innerText;
+        }
+        if (element.querySelector('td').innerText && element.querySelector('th').innerText === '電話番号'){
+          tel = element.querySelector('td').innerText;
+        }
+        if (element.querySelector('td').innerText && element.querySelector('th').innerText === '所在地'){
+          adrs = element.querySelector('td').innerText;
         }
         if (admin !== '') {
           results.push({
-            admin
+            admin,
+            tel,
+            adrs
           });
         }
       });
+      
     }
     console.log(results);
     toCsv(results, path.join('output', fileName));

@@ -30,6 +30,8 @@ const fileName = 'sample-labonavi.csv';
 
       const elements = document.querySelectorAll('#main section');
       Array.from(elements).map((element) => {
+        //Array.from() メソッドは、配列のようなオブジェクトを実際の配列に変換する。elements が配列でない場合でも、これを配列に変換する。
+        //map メソッドは、各要素に関数を適用して新しい値を生成し、それらの新しい値からなる新しい配列を生成します。
         let name, url;
         name = element
           .querySelector('h1')
