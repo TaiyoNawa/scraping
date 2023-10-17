@@ -21,7 +21,7 @@ const fileName = 'sample-hospitalsfile.csv';
     let results = [];
 
     //読み込むURL(件数)分ループさせる
-    for (i = 0; i < 3; i++) {
+    for (i = 0; i < records.length; i++) {
       // スクレイピングするサイトの読み込み
       const response = await Axios({
         method: 'get',
@@ -31,27 +31,40 @@ const fileName = 'sample-hospitalsfile.csv';
       const document = parser.parse(html);
 
       // スクレイピング
-      const elements = document.querySelectorAll('.table-hospital');
+      const elements = document.querySelectorAll('#info table.table-hospital tr');
+      let name, admin, tel, adrs, bed, holi, site;
       Array.from(elements).map((element) => {
-      let admin, tel, adrs, bed, holi, url;
-        if (element.querySelector('td').innerText && element.querySelector('th').innerText === '管理者'){
+        name = records[i].name;
+        if (/* element.querySelector('td').innerText &&  */element.querySelector('th').innerText === '管理者'){
             admin = element.querySelector('td').innerText;
         }
-        if (element.querySelector('td').innerText && element.querySelector('th').innerText === '電話番号'){
+        if (element.querySelector('th').innerText === '電話番号'){
           tel = element.querySelector('td').innerText;
         }
-        if (element.querySelector('td').innerText && element.querySelector('th').innerText === '所在地'){
-          adrs = element.querySelector('td').innerText;
+        if (element.querySelector('th').innerText === '所在地'){
+          adrs = element.querySelector('td').innerText.replace('\n','');
         }
-        if (admin !== '') {
-          results.push({
-            admin,
-            tel,
-            adrs
-          });
+        if (element.querySelector('th').innerText === '病床数'){
+          bed = element.querySelector('td').innerText;
+        }
+        if (element.querySelector('th').innerText === '休診日'){
+          holi = element.querySelector('td').innerText;
+        }
+        if (element.querySelector('th').innerText === '公式サイト'){
+          site = element.querySelector('a').getAttribute('href');
         }
       });
-      
+      if (admin !== '') {
+        results.push({
+          name,
+          admin,
+          tel,
+          adrs,
+          bed,
+          holi,
+          site
+        });
+      }
     }
     console.log(results);
     toCsv(results, path.join('output', fileName));

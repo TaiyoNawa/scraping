@@ -9,7 +9,7 @@ let results = [];
 (async () => {
   try {
     //ページ数分ループ
-    for (i = 1; i < 32; i++) {
+    for (i = 1; i < 33; i++) {
       // スクレイピングするサイトの読み込み
       const baseUrl = `https://hospitalsfile.doctorsfile.jp/search/pg${i}_st13/`;
       const response = await Axios({
@@ -24,7 +24,8 @@ let results = [];
         '.result-header'
       );
       Array.from(elements).map((element) => {
-        let url
+        let name,url
+        name = element.querySelector('a').innerText;
         if(element.querySelector('.result__name')){
             url = 'https://hospitalsfile.doctorsfile.jp' + element
             .querySelector('.result__name')
@@ -32,6 +33,7 @@ let results = [];
         }
         if (url !== '') {
             results.push({
+              name,
               url,
             });
           }

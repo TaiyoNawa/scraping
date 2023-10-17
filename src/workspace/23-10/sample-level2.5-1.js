@@ -10,7 +10,7 @@ let results = [];
   try {
     //ページ数分ループ（2重）
     for(i = 11; i < 15; i++){
-    for (j = 1; j < 32; j++) {
+    for (j = 1; j < 2; j++) {
       // スクレイピングするサイトの読み込み
       const baseUrl = `https://beauty.hotpepper.jp/pre${i}/PN${j}/`;
       const response = await Axios({
@@ -24,15 +24,19 @@ let results = [];
         'h3.slnName'
       );
       Array.from(elements).map((element) => {
-        let url
+        let name, url;
         if(element.querySelector('a')){
-            url = element
-            .querySelector('a')
-            .getAttribute('href');
+          name = element
+          .querySelector('a')
+          .innerText
+          url = element
+          .querySelector('a')
+          .getAttribute('href');
         }
         if (url !== '') {
             results.push({
-              url,
+              name,
+              url
             });
           }
       });
