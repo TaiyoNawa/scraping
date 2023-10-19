@@ -18,7 +18,7 @@ let results = [];
       const document = parser.parse(html);
 
       // スクレイピング
-      let name, url;
+/*       let name, url;
       const elements = document.querySelectorAll('table.exhi-table');
       Array.from(elements).map((element) => {
         if(element.querySelector('.exhi_link').innerText){
@@ -34,7 +34,25 @@ let results = [];
             url
           });
         }
+      }); */
+
+      const elements = document.querySelectorAll('table.exhi-table');
+      Array.from(elements).map((element) => {
+        let name, url;
+        if(element.querySelector('.exhi_link').innerText){
+          name = element.querySelector('.exhi_link').innerText;
+      }
+      if(element.querySelector('.exhi_link').innerText){
+        url = 'https://wsew2022-aki.tems-system.com/exhiSearch/WSEW/jp/Details?refno' + element.querySelector('.exhi_link').getAttribute('val-id');
+      }
+      if (name !== '') {
+        results.push({
+          name,
+          url,
+        });
+      }console.log(name,url);
       });
+
     console.log(results);
     toCsv(results, path.join('output', fileName));
   } catch (error) {
