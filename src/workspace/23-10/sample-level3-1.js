@@ -18,39 +18,23 @@ let results = [];
       const document = parser.parse(html);
 
       // スクレイピング
-/*       let name, url;
-      const elements = document.querySelectorAll('table.exhi-table');
-      Array.from(elements).map((element) => {
-        if(element.querySelector('.exhi_link').innerText){
-            name = element.querySelector('.exhi_link').innerText;
-        }
-        if(element.querySelector('.exhi_link').innerText){
-            url = 'https://wsew2022-aki.tems-system.com/exhiSearch/WSEW/jp/Details?refno' + element.querySelector('.exhi_link').getAttribute('val-id');
-        }
-        console.log(element.querySelector('.exhi_link').innerText);
-        if (name !== '') {
-          results.push({
-            name,
-            url
-          });
-        }
-      }); */
-
-      const elements = document.querySelectorAll('table.exhi-table');
+      const elements = document.querySelectorAll('tr');
+      /* console.log([...elements.querySelector('.exhi_link').innerText]); ←✖️querySelector('.exhi_link')はmapやfor内でしか使えない*/
       Array.from(elements).map((element) => {
         let name, url;
-        if(element.querySelector('.exhi_link').innerText){
-          name = element.querySelector('.exhi_link').innerText;
+        if(element.querySelector('.exhi_link')){
+          name = element.querySelector('.exhi_link')?.innerText;//?はそれより前の部分をnullかどうかを判定してnullだった場合にそれをを避ける
       }
-      if(element.querySelector('.exhi_link').innerText){
-        url = 'https://wsew2022-aki.tems-system.com/exhiSearch/WSEW/jp/Details?refno' + element.querySelector('.exhi_link').getAttribute('val-id');
+      if(element.querySelector('.exhi_link')){
+        url = 'https://wsew2022-aki.tems-system.com/exhiSearch/WSEW/jp/Details?refno=' + element.querySelector('.exhi_link')?.getAttribute('val-id');
       }
-      if (name !== '') {
+      console.log(name);
+      if ((name !== '') && (url)) {
         results.push({
           name,
           url,
         });
-      }console.log(name,url);
+      }
       });
 
     console.log(results);
