@@ -28,7 +28,7 @@ const outputdir = 'output';
     browser = await launchBrowser();
 
     //スクレイピングする会社の数だけループする
-    for (i = 0; i < records.length; i++) {
+    for (i = 0; i < 2; i++) {
       //URLとnameにCSVファイルのデータを格納し、仮想ブラウザーを立ち上げて、URLに格納したサイトに飛ぶ
       const page = await browser.newPage();
       const URL = await records[i].url;
@@ -105,3 +105,5 @@ const outputdir = 'output';
     browser.close();
   }
 })();
+//Docker　compornent のパス指定はどうする？
+//Docker run を抜けるには？Dockerデスクトップを消す？

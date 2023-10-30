@@ -27,17 +27,17 @@ const outputdir = 'output';
     browser = await launchBrowser();
 
     //スクレイピングする会社の数だけループする
-    for (i = 0; i < 2; i++) {
+    for (i = 0; i < records.length; i++) {
       //URLとnameにCSVファイルのデータを格納し、仮想ブラウザーを立ち上げて、URLに格納したサイトに飛ぶ
       const page = await browser.newPage();
       const URL = await records[i].url;
       const name = records[i].name;
       const categroy = records[i].categroy;
-      console.log(URL)
+      //console.log(URL);
       await page.goto(URL);
       displayLog(page);
-	
-			//　　画面のスクリーンショット
+
+      //　　画面のスクリーンショット
       // await page.screenshot({ path: `screenshot.png` });
 
       try {
@@ -45,7 +45,7 @@ const outputdir = 'output';
         const event = {
           rawName: name,
           clickTarget: URL,
-          categroy: categroy,
+          //categroy: categroy,
         };
 
         //クラス名.data-loadedが表示されるまで待つ
@@ -54,37 +54,36 @@ const outputdir = 'output';
         //resultにobj(後で設定する)を返す　evaluate内ではdevelopertoolと同じスクレイピング方法で情報を取得する
         const result = await page.evaluate(() => {
           //スクレイピング
-/*          a = document.querySelectorAll('.col-md-4 .right-column-section.row')[1]
- */         
-            const elements = document.querySelectorAll('.form-group-view-mode')
-            let url, email, tel, addres;
-            Array.from(elements).map((j) => {
-            if(j.querySelector('h2').innerText === 'ウェブサイト'){
-                url = j.querySelector('p')?.innerText.replace(/\n/g,'');
+          /*          a = document.querySelectorAll('.col-md-4 .right-column-section.row')[1]
+           */
+          const elements = document.querySelectorAll('.form-group-view-mode');
+          let url, email, tel, addres;
+          Array.from(elements).map((j) => {
+            if (j.querySelector('h2').innerText === 'ウェブサイト') {
+              url = j.querySelector('p')?.innerText.replace(/\n/g, '');
             }
-            if(j.querySelector('h2').innerText === 'Eメールアドレス'){
-                email = j.querySelector('p')?.innerText.replace(/\n/g,'');
+            if (j.querySelector('h2').innerText === 'Eメールアドレス') {
+              email = j.querySelector('p')?.innerText.replace(/\n/g, '');
             }
-            if(j.querySelector('h2').innerText === '電話番号'){
-                tel = j.querySelector('p')?.innerText.replace(/\n/g,'');
+            if (j.querySelector('h2').innerText === '電話番号') {
+              tel = j.querySelector('p')?.innerText.replace(/\n/g, '');
             }
-            if(j.querySelector('h2').innerText === '住所'){
-                addres = j.querySelector('p')?.innerText.replace(/\n/g,'');
+            if (j.querySelector('h2').innerText === '住所') {
+              addres = j.querySelector('p')?.innerText.replace(/\n/g, '');
             }
-          })
-          console.log(name,url,email,addres,1);
-          if(name != ''){
-            results.push({
-                name,
-                url,
-                email,
-                tel,
-                addres
-            })
-          }
+          });
+          //console.log(name,url,email,addres,1);
+
+          return {
+            url,
+            email,
+            tel,
+            addres,
+          };
         }); //eveluate文終了
+        console.log(result);
         //assignでeventにresultをコピーして挿入して、resultsにそれを入れる
-        results.push(Object.assign(event, result));////csv結果が変わらないのはなぜ？
+        results.push(Object.assign(event, result)); ////csv結果が変わらないのはなぜ？
         console.log(results);
       } catch (error) {
         console.log(error);

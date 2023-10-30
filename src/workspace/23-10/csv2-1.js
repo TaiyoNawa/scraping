@@ -2,7 +2,7 @@ const Axios = require('axios');
 const parser = require('node-html-parser');
 const path = require('path');
 const fs = require('fs');
-const toCsv = require('../../../lib/generateCsv');
+const toCsv = require('../../lib/generateCsv');
 const parse = require('csv-parse/sync');
 
 const fileName = 'sample-labonavi.csv';
@@ -11,7 +11,7 @@ const fileName = 'sample-labonavi.csv';
   try {
     //CSVファイル読み込み
     const data = await fs.readFileSync(
-      __dirname + '/output/sample-level2.csv',//dirnameは現在のディレクトリを表す
+      __dirname + '/output/sample-level2-1.csv',//dirnameは現在のディレクトリを表す
       'utf-8'
     );
     const records = parse.parse(data, {
