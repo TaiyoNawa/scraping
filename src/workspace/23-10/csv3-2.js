@@ -1,4 +1,3 @@
-//未着手！
 const { launchBrowser, displayLog } = require('./../../lib/browser');
 const fs = require('fs');
 const path = require('path');
@@ -10,7 +9,7 @@ const outputdir = 'output';
   let browser;
   //CSVファイルの読み込み
   const data = await fs.readFileSync(
-    __dirname + '/output/sample-level3-1.csv',
+    __dirname + '/output/sample-level3-2.csv',
     'utf-8'
   );
   const records = parse.parse(data, {
@@ -33,12 +32,11 @@ const outputdir = 'output';
       const page = await browser.newPage();
       const URL = await records[i].url;
       const name = records[i].name;
-      const categroy = records[i].categroy;
-      console.log(URL)
+      //console.log(URL);
       await page.goto(URL);
       displayLog(page);
-	
-			//　　画面のスクリーンショット
+
+      //　　画面のスクリーンショット
       // await page.screenshot({ path: `screenshot.png` });
 
       try {
@@ -46,7 +44,6 @@ const outputdir = 'output';
         const event = {
           rawName: name,
           clickTarget: URL,
-          categroy: categroy,
         };
 
         //クラス名.data-loadedが表示されるまで待つ
@@ -58,7 +55,7 @@ const outputdir = 'output';
 /*          a = document.querySelectorAll('.col-md-4 .right-column-section.row')[1]
  */         
             const elements = document.querySelectorAll('.form-group-view-mode')
-            let url, email, tel, addres;
+            let url, email, tel, address;
             Array.from(elements).map((j) => {
             if(j.querySelector('h2').innerText === 'ウェブサイト'){
                 url = j.querySelector('p')?.innerText.replace(/\n/g,'');
@@ -70,19 +67,16 @@ const outputdir = 'output';
                 tel = j.querySelector('p')?.innerText.replace(/\n/g,'');
             }
             if(j.querySelector('h2').innerText === '住所'){
-                addres = j.querySelector('p')?.innerText.replace(/\n/g,'');
+                address = j.querySelector('p')?.innerText.replace(/\n/g,'');
             }
           })
-        //   console.log(name,url,email,addres);
-          if(name != ''){
-            results.push({
-                name,
-                url,
-                email,
-                tel,
-                addres
-            })
-          }
+          console.log(url,email,tel,address,47397392429);
+          return({
+            url,
+            email,
+            tel,
+            address            
+          });
         }); //eveluate文終了
         //assignでeventにresultをコピーして挿入して、resultsにそれを入れる
         results.push(Object.assign(event, result));
@@ -96,7 +90,7 @@ const outputdir = 'output';
 
     //結果を入れるCSVファイルの作成
     const outputData = stringify(results, { header: true });
-    fs.writeFileSync(`${outputdir}/???.csv`, outputData, {
+    fs.writeFileSync(`${outputdir}/sample-kansai.csv`, outputData, {
       encoding: 'utf8',
     });
   } catch (error) {
@@ -105,3 +99,30 @@ const outputdir = 'output';
     browser.close();
   }
 })();
+
+
+            /*document.querySelectorAll('.form-group-view-mode')で取得したデータを順番にマップでループし、
+            　j.querySelector('h2').innerText === '〇〇'　でh2タグのテキストを判定して
+            　当てはまった〇〇の直後にあるpタグ（直後の一個のみ）の中身をurlやemailなどに格納する。(map１回で１URL分のデータを収集する)
+            　mapが終わったらreturnしてresultが終了→resultsにpushして行を増やしていく
+            　以上が一回のfor文ループで、次のURLのfor文ループが始まる。
+            　for文が完了したらfs.writeFileSyncでcsvファイルの書き込みをする。
+            */
+          /*
+            (async () => {...全体
+              for{...URLのループ
+                result = (()=>{
+                  document.querySelectorAll()
+                  map(() = > {...Allで取得した要素のループ
+                    ※ALLで取得した要素それぞれを別の行のデータにするならここにpush入れる。
+                  })
+                  return({...result に値を返す
+                    url,
+                    emailなど
+                  });
+                  results.push(event,result)...resultsにpushして行を追加
+                });  
+              }
+              fs.writeFileSync()...csvファイルに書き込み
+            })
+            */
