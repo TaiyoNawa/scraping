@@ -83,7 +83,7 @@ const outputdir = 'output';
         }); //eveluate文終了
         console.log(result);
         //assignでeventにresultをコピーして挿入して、resultsにそれを入れる
-        results.push(Object.assign(event, result)); ////csv結果が変わらないのはなぜ？
+        results.push(Object.assign(event, result)); 
         console.log(results);
       } catch (error) {
         console.log(error);

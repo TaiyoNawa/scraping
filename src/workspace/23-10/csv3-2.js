@@ -1,3 +1,13 @@
+/* docker使うコマンド
+# docker imageを buildします。
+docker-compose build
+
+# docker app containerにアクセスします。(bash)
+docker-compose run --rm app bash
+
+# containerアクセス後、スクリプトを実行(例はsample-level3.js, googleの検索画面をpupeteerを使ってスクショ)
+例：node src/workspace/sample-level3.js */
+
 const { launchBrowser, displayLog } = require('./../../lib/browser');
 const fs = require('fs');
 const path = require('path');
@@ -9,7 +19,7 @@ const outputdir = 'output';
   let browser;
   //CSVファイルの読み込み
   const data = await fs.readFileSync(
-    __dirname + '/output/sample-level3-2.csv',
+    __dirname + '/output/sample-level3-2-0.csv',
     'utf-8'
   );
   const records = parse.parse(data, {
@@ -50,6 +60,7 @@ const outputdir = 'output';
         await page.waitForSelector('.data-loaded');
 
         //resultにobj(後で設定する)を返す　evaluate内ではdevelopertoolと同じスクレイピング方法で情報を取得する
+        //会社情報取得
         const result = await page.evaluate(() => {
           //スクレイピング         
             const elements = document.querySelectorAll('.form-group-view-mode')
@@ -76,9 +87,8 @@ const outputdir = 'output';
             address            
           });
         }); //eveluate文終了
-
+        //ソーシャルメディア取得
         const result2 = await page.evaluate(() => {
-   
             const elements = document.querySelectorAll('.social-media-logo-container')
             let facebook, twitter,youtube, instagram;
             Array.from(elements).map((j) => {
