@@ -51,9 +51,7 @@ const outputdir = 'output';
 
         //resultにobj(後で設定する)を返す　evaluate内ではdevelopertoolと同じスクレイピング方法で情報を取得する
         const result = await page.evaluate(() => {
-          //スクレイピング
-/*          a = document.querySelectorAll('.col-md-4 .right-column-section.row')[1]
- */         
+          //スクレイピング         
             const elements = document.querySelectorAll('.form-group-view-mode')
             let url, email, tel, address;
             Array.from(elements).map((j) => {
@@ -70,7 +68,7 @@ const outputdir = 'output';
                 address = j.querySelector('p')?.innerText.replace(/\n/g,'');
             }
           })
-          console.log(url,email,tel,address,47397392429);
+          //console.log(url,email,tel,address);
           return({
             url,
             email,
@@ -78,8 +76,27 @@ const outputdir = 'output';
             address            
           });
         }); //eveluate文終了
-        //assignでeventにresultをコピーして挿入して、resultsにそれを入れる
-        results.push(Object.assign(event, result));
+
+        const result2 = await page.evaluate(() => {
+   
+            const elements = document.querySelectorAll('.social-media-logo-container')
+            let facebook, twitter,youtube, instagram;
+            Array.from(elements).map((j) => {
+              facebook = j.querySelector('.facebook-logo-color')?.getAttribute('href');
+              twitter = j.querySelector(".twitter-logo-color")?.getAttribute('href');
+              youtube = j.querySelector(".youtube-logo-color")?.getAttribute('href');
+              instagram = j.querySelector(".instagram-logo-color")?.getAttribute('href');
+          })
+          console.log(facebook, twitter,youtube, instagram);
+          return({
+            facebook,
+            twitter,
+            youtube,
+            instagram           
+          });
+        }); 
+
+        results.push(Object.assign(event, result, result2));
         console.log(results);
       } catch (error) {
         console.log(error);
@@ -88,7 +105,6 @@ const outputdir = 'output';
       }
     }
 
-    //結果を入れるCSVファイルの作成
     const outputData = stringify(results, { header: true });
     fs.writeFileSync(`${outputdir}/sample-kansai.csv`, outputData, {
       encoding: 'utf8',
