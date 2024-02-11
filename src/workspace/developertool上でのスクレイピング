@@ -1,4 +1,4 @@
-// CSVダウンロードメソッド
+// CSVダウンロードメソッド（最後に使うやつ）
 const downloadCSVFile = (csv, filename) => {
 	let csv_file, download_link;
 	csv_file = new Blob([csv], {type: "text/csv"});
@@ -10,7 +10,7 @@ const downloadCSVFile = (csv, filename) => {
 	download_link.click();
 }
 
-// CSVコンバートメソッド
+// CSVコンバートメソッド（最後から二番目に使うやつ）
 const convertCsvData = (arrayObj, headers) => {
 	const csvRawData = arrayObj.map(array => headers.map(header => array[header]))
 	csvRawData.unshift(headers);

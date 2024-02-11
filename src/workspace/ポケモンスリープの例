@@ -1,0 +1,92 @@
+//https://game8.jp/pokemonsleep/542649
+↑の料理のゾーン<tbody>に対して実行
+
+０．関数の準備
+// CSVダウンロードメソッド（最後に使うやつ）
+const downloadCSVFile = (csv, filename) => {
+	let csv_file, download_link;
+	csv_file = new Blob([csv], {type: "text/csv"});
+	download_link = document.createElement("a");
+	download_link.download = filename;
+	download_link.href = window.URL.createObjectURL(csv_file);
+	download_link.style.display = "none";
+	document.body.appendChild(download_link);
+	download_link.click();
+}
+
+// CSVコンバートメソッド（最後から二番目に使うやつ）
+const convertCsvData = (arrayObj, headers) => {
+	const csvRawData = arrayObj.map(array => headers.map(header => array[header]))
+	csvRawData.unshift(headers);
+	const csvdata = csvRawData.map(csv => [csv.join(','), '\r\n'].join(''))
+  return csvdata.join('');
+}
+
+１．取り出したい<tbody>タグに<tbody class="pokemon-ryouri">とつけた
+
+２．A = document.querySelector(".pokemon-ryouri");
+//↓これを取得した
+<tbody class="pokemon-ryouri">
+    <tr>
+        <td class="center">
+            <input type="checkbox" id="checkbox1_1">
+        </td>
+        <td class="center">
+            <img src="https://img.game8.jp/8444642/3608b65d272847dfad3ec158509 fd7a7.png/show" class="a-img lazy lazy-loaded" alt="とくせんリンゴ カレー" data-src="https://img.game8.jp/8444642/3608b65d272847dfad3 ec158509fd7a7.png/show" width="50" height="50" data-loaded="true"> 
+            "とくせんリンゴカレー"
+        </td>
+        <td>
+▼           <div class="align">
+                <a class="a-link" href="https://game8.jp/pokemonsleep/542835">..."とくせんリンゴ"</a>
+                "x7"
+            </div>
+            <hr class="a-table_line">
+            <b class="a-bold">【初期エナジー】 </b>
+            "668"
+            <br>
+            <b class="a-bold">【最大エナジー】 </b>
+            "1617"
+            <hr class="a-table_line">
+            <a class="a-link" href="https://game8.jp/pokemonsleep/546421">必要 食材を拾うポケモン</a>
+        </td>
+        <td class="center"> カレー・シチュー </td>
+    </tr>
+    <tr>...</tr>
+    <tr>...</tr>
+</tbody>
+
+３．<tr>の中の<td>について、1つめと4つめの<td>を消す(ここはあくまで工夫したところ。ほかにいいやり方はある)
+// Aの中にある<tr>要素を取得
+let A1 = A.querySelectorAll('tbody tr');
+// A2の初期化
+let A2 = [];
+
+for (let i = 0; i < A1.length; i++) {
+    let tr = A1[i];
+    let tdList = tr.querySelectorAll('td');
+    let tdArray = Array.from(tdList);
+    tdArray.splice(3, 1); // 4つ目の<td>要素を削除
+    tdArray.splice(0, 1); // 1つ目の<td>要素を削除
+    let newTr = document.createElement('tr');
+    tdArray.forEach(td => {
+        newTr.appendChild(td);
+    });
+    A2.push(newTr);
+}
+
+４．A3の中に取得したい情報を配列で格納
+A3 = A2.map((i) => {
+    name = i.querySelector("img").getAttribute("alt");
+    gredients = i.querySelectorAll("td");
+    gredient = gredients[1].innerText.replace(/\n/g, '').replace(/▶︎必要食材を拾うポケモン/g,"");
+    return {name, gredient}
+})
+//結果：A4＝[name = "とくせんリンゴカレー", gredient = "とくせんリンゴ×7【初期エナジー】668【最大エナジー】1617▶︎必要食材を拾うポケモン"},{...},...]
+
+５．CSVに変換
+B = convertCsvData(A3,['name', 'gredient']);
+
+６．CSVをブラウザからダウンロード
+downloadCSVFile(B,"pokemon-sleep.csv");
+
+
