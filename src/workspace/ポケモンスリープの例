@@ -81,7 +81,7 @@ A3 = A2.map((i) => {
     gredient = gredients[1].innerText.replace(/\n/g, '').replace(/▶︎必要食材を拾うポケモン/g,"");
     return {name, gredient}
 })
-//結果：A4＝[name = "とくせんリンゴカレー", gredient = "とくせんリンゴ×7【初期エナジー】668【最大エナジー】1617▶︎必要食材を拾うポケモン"},{...},...]
+//結果：A3＝[name = "とくせんリンゴカレー", gredient = "とくせんリンゴ×7【初期エナジー】668【最大エナジー】1617▶︎必要食材を拾うポケモン"},{...},...]
 
 ５．CSVに変換
 B = convertCsvData(A3,['name', 'gredient']);
@@ -90,3 +90,21 @@ B = convertCsvData(A3,['name', 'gredient']);
 downloadCSVFile(B,"pokemon-sleep.csv");
 
 
+
+
+
+//別解
+３を飛ばして４で…
+
+A2 = querySelectorAll("tr")
+A3 = [...A2].map((i) => {//ここの[...A2]の意味は？
+    td = i.querySelectorAll("td");
+    name = td[1].querySelector("img").getAttribute("alt");
+    gredients = td[2].innerText.replace(/\n/g, "").replace(/▶︎必要食材を拾うポケモン/, "");
+    return {name,gredients};
+})
+
+
+A2はNodeListであり、配列ではない。
+[...A2]を使うことで、NodeListを配列に変換して、
+配列のメソッドやプロパティ（mapなど）を使うことができるようになる。
