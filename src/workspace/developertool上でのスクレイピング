@@ -29,3 +29,7 @@ b = convertCsvData(a, ['url']);//取得した物をcsv形式にする。aが2列
 downloadCSVFile(b, 'sample.csv');//ダウンロードする
 
 
+
+
+forEachは要素の数だけ繰り返す（for文みたいな）
+mapは要素の置き換え

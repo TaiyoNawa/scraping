@@ -1,0 +1,115 @@
+// CSVダウンロードメソッド（最後に使うやつ）
+const downloadCSVFile = (csv, filename) => {
+	let csv_file, download_link;
+	csv_file = new Blob([csv], {type: "text/csv"});
+	download_link = document.createElement("a");
+	download_link.download = filename;
+	download_link.href = window.URL.createObjectURL(csv_file);
+	download_link.style.display = "none";
+	document.body.appendChild(download_link);
+	download_link.click();
+}
+
+// CSVコンバートメソッド（最後から二番目に使うやつ）
+const convertCsvData = (arrayObj, headers) => {
+	const csvRawData = arrayObj.map(array => headers.map(header => array[header])) 
+	csvRawData.unshift(headers);//先頭にヘッダー（nameなど）を追加
+	const csvdata = csvRawData.map(csv => [csv.join(','), '\r\n'].join(''))
+  return csvdata.join('');
+}
+
+A = [...document.querySelectorAll(".contentsexhibitor-list li")]
+//色々取れるが、spanが邪魔
+
+
+//spanタグを削除
+A.forEach(function(element) {
+    let span = element.querySelector("span");
+    if (span) {
+        span.parentNode.removeChild(span);
+    }
+});
+
+B = A.map(i => {
+    a =i.querySelector("a")
+    name = i.innerText;
+    url = a?.getAttribute("href");//?は存在すれば
+    return {name,url}
+})
+
+# BはforEachでも取れる（結果はundifinedと出るがconsole.logするとちゃんと取れている）
+# const B = []
+# A.forEach(i => {
+#     a =i.querySelector("a")
+#     name = i.innerText;
+#     url = a?.getAttribute("href");//?は存在すれば
+#     A2.push(company)
+# })  
+
+C = convertCsvData(B, ['name','url']);//取得した物をcsv形式にする。aが2列の時は'url'のやつもう一つ増やす。
+#ここのname,urlは取得したBのキーの名前と一致していないといけない！
+downloadCSVFile(C, 'motorcycle-show.csv');//ダウンロードする
+
+ーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー
+
+#CSVコンバートメソッドの解説
+例えば、convertCsvData = (C, ['Name','Age','Country'])と送ると、、、
+
+const arrayObj = [
+    { Name: 'John', Age: 30, Country: 'USA' },
+    { Name: 'Alice', Age: 25, Country: 'Canada' },
+    { Name: 'Bob', Age: 35, Country: 'UK' }
+];
+const headers = ['Name', 'Age', 'Country'];
+が格納される。
+だから例えば、D = C[1]['Name']と入力すると"Alice"と出力される。
+
+// csvRawData の生成
+const csvRawData = arrayObj.map(obj => headers.map(header => obj[header]));
+// →csvRawData: [['John', 30, 'USA'], ['Alice', 25, 'Canada'], ['Bob', 35, 'UK']]
+
+// 先頭にヘッダーを追加
+csvRawData.unshift(headers);
+// csvRawData: [['Name', 'Age', 'Country'], ['John', 30, 'USA'], ['Alice', 25, 'Canada'], ['Bob', 35, 'UK']]
+
+// CSV形式の文字列に変換
+const csvdata = csvRawData.map(csv => [csv.join(','), '\r\n'].join(''));
+// csvdata: ['Name,Age,Country\r\n', 'John,30,USA\r\n', 'Alice,25,Canada\r\n', 'Bob,35,UK\r\n']
+※.join()は配列内の全ての要素を連結して一つの文字列に変換する
+→指定された区切り文字列を各要素の間に挿入して、文字列として結合する。
+
+// 最終的なCSV形式の文字列を生成
+const csvString = csvdata.join('');
+/*結果↓
+Name,Age,Country
+Name,Age,Country
+John,30,USA
+Alice,25,Canada
+Bob,35,UK
+*/
+
+// csvString を返す
+return csvString;
+
+
+#CSVダウンロードメソッド（最後に使うやつ）の解説
+いらないかなー
+
+# querySelectorではこういうやり方もできる
+<div data-dtm-category-id="19503" data-dtm-category-name="展示会" data-dtm-responses="[{&quot;name&quot;:&quot;畜産資材EXPO&quot;,&quot;taxonomyId&quot;:143520}]" data-dtm-exhibitor-id="exh-8b3f2d7e-c0af-49e9-ac47-99e8822d98b9">
+	<hr>
+	<h4>展示会</h4>
+	<div>
+		<span class="label label-default label-in-list tag-item">畜産資材EXPO</span>
+	</div>
+</div>
+の時、
+document.querySelector('[data-dtm-category-name="展示会"]');
+
+
+
+
+
+
+forEachは要素の数だけ繰り返す（for文みたいな）
+mapは要素の置き換え
