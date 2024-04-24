@@ -50,6 +50,9 @@ C = convertCsvData(B, ['name','url']);//取得した物をcsv形式にする。a
 #ここのname,urlは取得したBのキーの名前と一致していないといけない！
 downloadCSVFile(C, 'motorcycle-show.csv');//ダウンロードする
 
+参考！https://ics.media/entry/200825/
+
+
 ーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー
 
 #CSVコンバートメソッドの解説
@@ -113,3 +116,7 @@ document.querySelector('[data-dtm-category-name="展示会"]');
 
 forEachは要素の数だけ繰り返す（for文みたいな）
 mapは要素の置き換え
+
+
+配列操作解説
+https://ics.media/entry/200825/
