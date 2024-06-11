@@ -40,10 +40,11 @@ const outputdir = 'output';
     //スクレイピングする会社の数だけループする
     for (i = 0; i < records.length; i++) {
       //URLとnameにCSVファイルのデータを格納し、仮想ブラウザーを立ち上げて、URLに格納したサイトに飛ぶ
+      try {
       const page = await browser.newPage();
       const URL = await records[i].url;
       const name = records[i].name;
-      await page.goto(URL,{timeout:0});
+      await page.goto(URL,{timeout:60000});
       //displayLog(page);
 
       try {
@@ -54,7 +55,7 @@ const outputdir = 'output';
         };
 
         //クラス名.data-loadedが表示されるまで待つ
-        await page.waitForSelector('.data-loaded', {timeout: 0});//ここで時間を決めれる
+        await page.waitForSelector('.data-loaded', {timeout: 60000});//ここで時間を決めれる
 
         const result = await page.evaluate(() => {
           //スクレイピング  
@@ -105,8 +106,23 @@ const outputdir = 'output';
       } finally {
         await page.close();
       }
+    } catch (error) {
+        console.log(`Error navigating to URL: ${records[i].name} - ${error}`);
+        results.push({
+            rawName: records[i].name,
+            clickTarget: "",
+            exponame: "",
+            tenji: "",
+            komabango: "",
+            website: "",
+            tel: "",
+            email: "",
+            address: "",
+            country: ""
+          });
+      }
     }
-
+    console.log("ここでは格納されているが、なぜかCSVの中身は行番号のみしか入っていない",results)
     const outputData = stringify(results, { header: true });
     fs.writeFileSync(`${outputdir}/自治体・公共Week.csv`, outputData, {
       encoding: 'utf8',

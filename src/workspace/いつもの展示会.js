@@ -37,12 +37,12 @@ const outputdir = 'output';
     browser = await launchBrowser();
 
     //スクレイピングする会社の数だけループする
-    for (i = 0; i < records.length; i++) {
-      //URLとnameにCSVファイルのデータを格納し、仮想ブラウザーを立ち上げて、URLに格納したサイトに飛ぶ
+    for (i = 0; i < records.length; i++) {//URLとnameにCSVファイルのデータを格納し、仮想ブラウザーを立ち上げて、URLに格納したサイトに飛ぶ。
+      try{//URLのタイムアウトエラーなどのエラーが起こった際に、強制終了せずに次のfor文に繋げるようにtry-catch構文を使う。
       const page = await browser.newPage();
       const URL = await records[i].url;
       const name = records[i].name;
-      await page.goto(URL,{ timeout: 0});//pageに飛ぶ際のtimeoutをここで設定する。timeout: 0で無限に待つ。
+      await page.goto(URL,{ timeout: 60000});//pageに飛ぶ際のtimeoutをここで設定する。timeout: 0で無限に待つ。
       //displayLog(page);
 
       try {
@@ -105,7 +105,22 @@ const outputdir = 'output';
       } finally {
         await page.close();
       }
+    }catch (error) {//URL遷移などのエラーが起きた時の処理
+      console.log(`Error navigating to URL: ${records[i].name} - ${error}`);
+      results.push({//resultsにrawNameだけプッシュしておく。変更あったらここも変える。
+          rawName: records[i].name,
+          clickTarget: "",
+          exponame: "",
+          tenji: "",
+          komabango: "",
+          website: "",
+          tel: "",
+          email: "",
+          address: "",
+          country: ""
+        });
     }
+  }
 
     const outputData = stringify(results, { header: true });
     fs.writeFileSync(`${outputdir}/〇〇.csv`, outputData, {
@@ -117,6 +132,3 @@ const outputdir = 'output';
     browser.close();
   }
 })();
-
-
-// タイムアウトエラーが起きてもtry catchでその部分だけ飛ばしてスクレイピングを継続させるような文にする！
