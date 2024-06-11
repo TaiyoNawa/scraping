@@ -8,6 +8,7 @@ docker-compose run --rm app bash
 # containerアクセス後、スクリプトを実行(例はsample-level3.js, googleの検索画面をpupeteerを使ってスクショ)
 例：node src/workspace/sample-level3.js */
 
+// 自治体・公共Week
 const { launchBrowser, displayLog } = require('./../../lib/browser');
 const fs = require('fs');
 const path = require('path');
@@ -19,7 +20,7 @@ const outputdir = 'output';
   let browser;
   //CSVファイルの読み込み
   const data = await fs.readFileSync(
-    __dirname + '/../output/〇〇.csv',
+    __dirname + '/../output/自治体・公共Week.csv',
     'utf-8'
   );
   const records = parse.parse(data, {
@@ -42,7 +43,7 @@ const outputdir = 'output';
       const page = await browser.newPage();
       const URL = await records[i].url;
       const name = records[i].name;
-      await page.goto(URL,{ timeout: 0});//pageに飛ぶ際のtimeoutをここで設定する。timeout: 0で無限に待つ。
+      await page.goto(URL,{timeout:0});
       //displayLog(page);
 
       try {
@@ -53,8 +54,7 @@ const outputdir = 'output';
         };
 
         //クラス名.data-loadedが表示されるまで待つ
-        await page.waitForSelector('.data-loaded', {timeout: 60000});//（多分欲しい情報が表示されるまでの時間を）ここで時間を決めれる。0で無限に待つ。
-        //ロードされた後に表示されるクラス名をここで指定しておけば、そのクラス名が表示されるまでtimeoutミリ秒待つ。
+        await page.waitForSelector('.data-loaded', {timeout: 0});//ここで時間を決めれる
 
         const result = await page.evaluate(() => {
           //スクレイピング  
@@ -85,7 +85,7 @@ const outputdir = 'output';
                 }
             }
           })
-          const exponameTemp = Array.from(document.querySelectorAll('[data-dtm-category-name="展示会・出展カテゴリ"] div span'))//展示会名を全て取得して配列格納し、','で区切って結合
+          const exponameTemp = Array.from(document.querySelectorAll('[data-dtm-category-name="展示会名"] div span'))//展示会名を全て取得して配列格納し、','で区切って結合
           if(exponameTemp!=null){
             exponame = exponameTemp.map(i => {
               name = i.innerText.replace(/-/g,"")
@@ -108,7 +108,7 @@ const outputdir = 'output';
     }
 
     const outputData = stringify(results, { header: true });
-    fs.writeFileSync(`${outputdir}/〇〇.csv`, outputData, {
+    fs.writeFileSync(`${outputdir}/自治体・公共Week.csv`, outputData, {
       encoding: 'utf8',
     });
   } catch (error) {
@@ -118,5 +118,3 @@ const outputdir = 'output';
   }
 })();
 
-
-// タイムアウトエラーが起きてもtry catchでその部分だけ飛ばしてスクレイピングを継続させるような文にする！
