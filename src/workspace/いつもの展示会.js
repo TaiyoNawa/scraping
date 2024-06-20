@@ -9,11 +9,13 @@ docker-compose run --rm app bash
 例：node src/workspace/sample-level3.js */
 
 const { launchBrowser, displayLog } = require('./../../lib/browser');
-const fs = require('fs');
-const path = require('path');
-const { stringify } = require('csv-stringify/sync');
-const parse = require('csv-parse/sync');
+const fs = require('fs');//ファイル操作に関する関数を利用可能に
+const path = require('path');//パスの結合、解析、正規化などの操作が可能に
+const { stringify } = require('csv-stringify/sync');//CSV形式のデータを文字列に変換するモジュール
+const parse = require('csv-parse/sync');//CSV形式の文字列を解析してJavaScriptのオブジェクトに変換するためのモジュール
 const outputdir = 'output';
+const puppeteer = require('puppeteer');//headless:newにするためにとりあえずインポート
+
 
 (async () => {
   let browser;
@@ -34,7 +36,8 @@ const outputdir = 'output';
 
   try {
     //仮想的なブラウザーを立ち上げるための関数をbrowserに格納
-    browser = await launchBrowser();
+     // browser = await launchBrowser();
+     browser = await launchBrowser();
 
     //スクレイピングする会社の数だけループする
     for (i = 0; i < records.length; i++) {//URLとnameにCSVファイルのデータを格納し、仮想ブラウザーを立ち上げて、URLに格納したサイトに飛ぶ。
@@ -132,3 +135,5 @@ const outputdir = 'output';
     browser.close();
   }
 })();
+
+

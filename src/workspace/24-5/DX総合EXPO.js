@@ -62,7 +62,7 @@ function extractExpoInfo(text) {
           rawName: name,
           clickTarget: URL,
         };
-        //クラス名.data-loadedが表示されるまで待つ
+        //4秒待つ
         await new Promise(resolve => setTimeout(resolve, 4000));
         const koma ="";
         const exponame ="";
