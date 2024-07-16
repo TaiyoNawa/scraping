@@ -21,7 +21,7 @@ const puppeteer = require('puppeteer');//headless:newにするためにとりあ
   let browser;
   //CSVファイルの読み込み
   const data = await fs.readFileSync(
-    __dirname + '/../output/〇〇.csv',
+    __dirname + '/../output/建築の先端技術展.csv',
     'utf-8'
   );
   const records = parse.parse(data, {
@@ -62,10 +62,9 @@ const puppeteer = require('puppeteer');//headless:newにするためにとりあ
         const result = await page.evaluate(() => {
           //スクレイピング
           //最初に宣言しないとCSVに含まれない可能性もあるので初期化
-          let komabango = "", website = "", email = "", tel = "", country = "", address = "", tenji = ""
+          let komabango = "", website = "", email = "", tel = "", country = "", address = "", tenji = "";
           tenji = document.querySelector('[data-dtm-category-name="展示会"] span')?.innerText ?? "";
-          //??演算子は左側の値が null または undefined である場合に右側の値を返す。?.だと、該当する要素がないときはundefinedを返す仕様になってる。
-          //undefinedがcsvの最初の企業の取得要素に入ると、そもそもCSVに表示されないし、以降の企業でも取得できてもCSVに反映されない。
+          //?? 演算子は左側の値が null または undefined である場合に右側の値を返す。
           const elements = document.querySelectorAll('.right-column-section')
             
             Array.from(elements).map((j) => {
@@ -90,14 +89,14 @@ const puppeteer = require('puppeteer');//headless:newにするためにとりあ
                 }
             }
           })
-          const exponameTemp = Array.from(document.querySelectorAll('[data-dtm-category-name="展示会・出展カテゴリ"] div span'))//展示会名を全て取得して配列格納し、','で区切って結合。名前はうまく変えて。
-          if(exponameTemp!=null){
-            exponame = exponameTemp.map(i => {
+          const kategoryTemp = Array.from(document.querySelectorAll('[data-dtm-category-name="製品カテゴリー"] div span'))//展示会名を全て取得して配列格納し、','で区切って結合。
+          if(kategoryTemp!=null){
+            kategory = kategoryTemp.map(i => {
               name = i.innerText.replace(/-/g,"")
               return name
             }).join(",")
             }else{
-            exponame = ""
+            kategory = ""
           }
           kyodoTemp = Array.from(document.querySelectorAll('.sharer-section a'))//共同出展社を全て取得して配列格納し、','で区切って結合。
           if(kyodoTemp!=null){
@@ -109,7 +108,7 @@ const puppeteer = require('puppeteer');//headless:newにするためにとりあ
             kyodo = ""
           }
           return({
-            exponame,tenji, komabango, website, tel, email, address, country, kyodo
+            kategory,tenji, komabango, website, tel, email, address, country, kyodo
           });
         }); //eveluate文終了
         results.push(Object.assign(event, result));
@@ -121,10 +120,10 @@ const puppeteer = require('puppeteer');//headless:newにするためにとりあ
       }
     }catch (error) {//URL遷移などのエラーが起きた時の処理
       console.log(`Error navigating to URL: ${records[i].name} - ${error}`);
-      results.push({//resultsにプッシュしておく。変更あったらここも変える。
+      results.push({//resultsにrawNameだけプッシュしておく。変更あったらここも変える。
           rawName: records[i].name,
           clickTarget: "",
-          exponame: "",
+          kategory: "",
           tenji: "",
           komabango: "",
           website: "",
@@ -138,7 +137,7 @@ const puppeteer = require('puppeteer');//headless:newにするためにとりあ
   }
 
     const outputData = stringify(results, { header: true });
-    fs.writeFileSync(`${outputdir}/〇〇.csv`, outputData, {
+    fs.writeFileSync(`${outputdir}/建築の先端技術展.csv`, outputData, {
       encoding: 'utf8',
     });
   } catch (error) {
