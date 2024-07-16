@@ -25,10 +25,27 @@ b = a.map(i => {
     return {name, url}
 })
 
-c = convertCsvData(b, ['name','url']);
-d = downloadCSVFile(c, '〇〇.csv');
+// 重複を削除するためのフィルター
+c = b.filter((item, index, self) =>
+    index === self.findIndex((t) => (
+        (t.name === item.name) && (t.url === item.url)
+    ))
+);
 
+d = convertCsvData(c, ['name','url']);
+e = downloadCSVFile(d, '〇〇.csv');
 
+/* filterの説明
+b.filter は、配列 b の各要素に対して指定された関数を実行し、新しい配列 c を作成します。
+filter 関数内のコールバック関数は、現在の要素 item のインデックス index と配列 self を引数に取ります。
+self.findIndex((t) => (t.name === item.name)) は、
+配列 self の中で name が現在の item.name と一致する最初の要素のインデックスを返します。
+index === self.findIndex((t) => ((t.name === item.name) && (t.url === item.url))) は、
+現在の要素 item のインデックスがその nameとurl が最初に見つかったインデックスと一致する場合にのみ true を返します。
+これにより、重複した name を持つ要素がフィルタリングされ、最初に見つかった要素のみが配列 c に保持されます。
+*/
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /* 写真にaタグがある場合はこっち */
 

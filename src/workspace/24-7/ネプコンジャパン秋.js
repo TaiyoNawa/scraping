@@ -21,7 +21,7 @@ const puppeteer = require('puppeteer');//headless:newにするためにとりあ
   let browser;
   //CSVファイルの読み込み
   const data = await fs.readFileSync(
-    __dirname + '/../output/〇〇.csv',
+    __dirname + '/../output/ネプコンジャパン秋.csv',
     'utf-8'
   );
   const records = parse.parse(data, {
@@ -64,8 +64,7 @@ const puppeteer = require('puppeteer');//headless:newにするためにとりあ
           //最初に宣言しないとCSVに含まれない可能性もあるので初期化
           let komabango = "", website = "", email = "", tel = "", country = "", address = "", tenji = ""
           tenji = document.querySelector('[data-dtm-category-name="展示会"] span')?.innerText ?? "";
-          //??演算子は左側の値が null または undefined である場合に右側の値を返す。?.だと、該当する要素がないときはundefinedを返す仕様になってる。
-          //undefinedがcsvの最初の企業の取得要素に入ると、そもそもCSVに表示されないし、以降の企業でも取得できてもCSVに反映されない。
+          //?? 演算子は左側の値が null または undefined である場合に右側の値を返す。
           const elements = document.querySelectorAll('.right-column-section')
             
             Array.from(elements).map((j) => {
@@ -90,7 +89,7 @@ const puppeteer = require('puppeteer');//headless:newにするためにとりあ
                 }
             }
           })
-          const exponameTemp = Array.from(document.querySelectorAll('[data-dtm-category-name="展示会・出展カテゴリ"] div span'))//展示会名を全て取得して配列格納し、','で区切って結合。名前はうまく変えて。
+          const exponameTemp = Array.from(document.querySelectorAll('[data-dtm-category-name="展示会"] div span'))//展示会名を全て取得して配列格納し、','で区切って結合。
           if(exponameTemp!=null){
             exponame = exponameTemp.map(i => {
               name = i.innerText.replace(/-/g,"")
@@ -128,7 +127,7 @@ const puppeteer = require('puppeteer');//headless:newにするためにとりあ
   }
 
     const outputData = stringify(results, { header: true });
-    fs.writeFileSync(`${outputdir}/〇〇.csv`, outputData, {
+    fs.writeFileSync(`${outputdir}/ネプコンジャパン秋.csv`, outputData, {
       encoding: 'utf8',
     });
   } catch (error) {
