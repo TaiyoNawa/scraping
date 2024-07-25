@@ -9,7 +9,7 @@ const fileName = 'ウェルネスフード.csv';
 let results = [];
 (async () => {
   try {
-    // ページ数分ループ（2重）
+    // ページ数分ループ
     for(let i = 1; i < 11; i++){
 
       // スクレイピングするサイトの読み込み

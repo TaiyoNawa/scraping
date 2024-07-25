@@ -9,7 +9,7 @@ const fileName = '国際物流総合展.csv';
 let records = [];
 (async () => {
   try {
-    // ページ数分ループ（2重）
+    // ページ数分ループ
     for(let i = 1; i < 14; i++){
 
       // スクレイピングするサイトの読み込み

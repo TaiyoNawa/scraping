@@ -24,6 +24,8 @@ b = a.map(i => {
     url = i.querySelector("a").getAttribute("href");
     return {name, url}
 })
+//mapを使うと配列の中にreturnの結果が格納されていく
+//↑は[{...},{...},...,{...}]のようになる
 
 // 重複を削除するためのフィルター
 c = b.filter((item, index, self) =>
