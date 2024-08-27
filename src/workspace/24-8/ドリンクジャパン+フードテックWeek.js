@@ -21,7 +21,7 @@ const puppeteer = require('puppeteer');//headless:newにするためにとりあ
   let browser;
   //CSVファイルの読み込み
   const data = await fs.readFileSync(
-    __dirname + '/../output/〇〇.csv',
+    __dirname + '/../output/ドリンクジャパン+フードテックWeekURL.csv',
     'utf-8'
   );
   const records = parse.parse(data, {
@@ -150,7 +150,7 @@ const puppeteer = require('puppeteer');//headless:newにするためにとりあ
   }
 
     const outputData = stringify(results, { header: true });
-    fs.writeFileSync(`${outputdir}/〇〇.csv`, outputData, {
+    fs.writeFileSync(`${outputdir}/ドリンクジャパン+フードテックWeek.csv`, outputData, {
       encoding: 'utf8',
     });
   } catch (error) {

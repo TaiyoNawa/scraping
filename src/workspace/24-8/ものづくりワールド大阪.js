@@ -21,7 +21,7 @@ const puppeteer = require('puppeteer');//headless:newにするためにとりあ
   let browser;
   //CSVファイルの読み込み
   const data = await fs.readFileSync(
-    __dirname + '/../output/〇〇.csv',
+    __dirname + '/../output/ものづくりワールド大阪URL.csv',
     'utf-8'
   );
   const records = parse.parse(data, {
@@ -36,9 +36,8 @@ const puppeteer = require('puppeteer');//headless:newにするためにとりあ
 
   try {
     //仮想的なブラウザーを立ち上げるための関数をbrowserに格納
+     // browser = await launchBrowser();
      browser = await launchBrowser();
-     await new Promise(resolve => setTimeout(resolve, 10000)); //最初のブラウザ立ち上げから10秒待つ（これしないと最初の行が取得できない）
-
 
     //スクレイピングする会社の数だけループする
     for (i = 0; i < records.length; i++) {//URLとnameにCSVファイルのデータを格納し、仮想ブラウザーを立ち上げて、URLに格納したサイトに飛ぶ。
@@ -64,7 +63,7 @@ const puppeteer = require('puppeteer');//headless:newにするためにとりあ
           //スクレイピング
           //最初に宣言しないとCSVに含まれない可能性もあるので初期化
           let komabango = "", website = "", email = "", tel = "", country = "", address = "", tenji = ""
-          //tenji = document.querySelector('[data-dtm-category-name="展示会"] span')?.innerText ?? "";
+          tenji = document.querySelector('[data-dtm-category-name="展示会"] span')?.innerText ?? "";
           //??演算子は左側の値が null または undefined である場合に右側の値を返す。?.だと、該当する要素がないときはundefinedを返す仕様になってる。
           //undefinedがcsvの最初の企業の取得要素に入ると、そもそもCSVに表示されないし、以降の企業でも取得できてもCSVに反映されない。
           const elements = document.querySelectorAll('.right-column-section')
@@ -99,15 +98,6 @@ const puppeteer = require('puppeteer');//headless:newにするためにとりあ
             }).join(",")
             }else{
             exponame = ""
-          }
-          const tenjiTemp = Array.from(document.querySelectorAll('[data-dtm-category-name="展示会"] span'))//展示会名を全て取得して配列格納し、','で区切って結合。名前はうまく変えて。
-          if(tenjiTemp!=null){
-            tenji = tenjiTemp.map(i => {
-              name = i.innerText.replace(/-/g,"")
-              return name
-            }).join(",")
-            }else{
-            tenji = ""
           }
           kyodoTemp = Array.from(document.querySelectorAll('.sharer-section a'))//共同出展社を全て取得して配列格納し、','で区切って結合。
           kyodoMainTemp = document.querySelectorAll("#mainStandHolderLink")
@@ -150,7 +140,7 @@ const puppeteer = require('puppeteer');//headless:newにするためにとりあ
   }
 
     const outputData = stringify(results, { header: true });
-    fs.writeFileSync(`${outputdir}/〇〇.csv`, outputData, {
+    fs.writeFileSync(`${outputdir}/ものづくりワールド大阪.csv`, outputData, {
       encoding: 'utf8',
     });
   } catch (error) {
