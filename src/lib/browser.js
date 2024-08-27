@@ -9,6 +9,7 @@ const launchBrowser = () =>
       // `headless: true` (default) enables old Headless;
       // `headless: 'new'` enables new Headless;
       // `headless: false` enables “headful” mode.
+      //protocolTimeout: 120000,  //ここでタイムアウトを設定
   });
 
 const displayLog = (page) =>
