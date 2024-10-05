@@ -1,10 +1,8 @@
 /* docker使うコマンド
 # docker imageを buildします。
 docker-compose build
-
 # docker app containerにアクセスします。(bash)
 docker-compose run --rm app bash
-
 # containerアクセス後、スクリプトを実行(例はsample-level3.js, googleの検索画面をpupeteerを使ってスクショ)
 例：node src/workspace/sample-level3.js */
 
@@ -14,10 +12,10 @@ const path = require('path');//パスの結合、解析、正規化などの操�
 const { stringify } = require('csv-stringify/sync');//CSV形式のデータを文字列に変換するモジュール
 const parse = require('csv-parse/sync');//CSV形式の文字列を解析してJavaScriptのオブジェクトに変換するためのモジュール
 const outputdir = 'output';
-const puppeteer = require('puppeteer');//headless:newにするためにとりあえずインポート
+const puppeteer = require('puppeteer');//headless:newにするためにとりあえずインポート。使われてないように見えるが、launchBrowse()内では使用されている
 
 
-(async () => {
+(async () => {// asyncは非同期処理（処理を並列で行う）の関数であることを示す
   let browser;
   //CSVファイルの読み込み
   const data = await fs.readFileSync(
@@ -38,7 +36,7 @@ const puppeteer = require('puppeteer');//headless:newにするためにとりあ
     //仮想的なブラウザーを立ち上げるための関数をbrowserに格納
      browser = await launchBrowser();
      await new Promise(resolve => setTimeout(resolve, 10000)); //最初のブラウザ立ち上げから10秒待つ（これしないと最初の行が取得できない）
-
+    //await はPromise（非同期処理の結果を保証するオブジェクト）の結果を待ってから次の行に進む
 
     //スクレイピングする会社の数だけループする
     for (i = 0; i < records.length; i++) {//URLとnameにCSVファイルのデータを格納し、仮想ブラウザーを立ち上げて、URLに格納したサイトに飛ぶ。
