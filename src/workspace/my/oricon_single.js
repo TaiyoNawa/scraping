@@ -10,8 +10,12 @@ const https = require('https');//AxiosError: unable to verify the first certific
 const date = new Date()
 console.log(date)
 const today = date.getFullYear() + "-" + date.getMonth() + "-" + date.getDate()-2
-// const fileName = `オリコンシングルランキング_${today}.csv`;
-const outputdir = "C:\\Users\\PC_User\\OneDrive\\myScraping\\oricon\\シングル"
+const fileName = `オリコンシングルランキング_${today}.csv`;
+const outputdir = "my-output\\oricon\\シングル"
+if (!fs.existsSync(outputdir)) {
+  fs.mkdirSync(outputdir, { recursive: true });
+}
+
 let results = [];
 (async () => {
   try {
@@ -37,9 +41,15 @@ let results = [];
     }
     console.log(results);
     const outputData = stringify(results, { header: true });
-    fs.writeFileSync(`${outputdir}/oricon初.csv`, outputData, {
-      encoding: 'utf8',
-    });
+    try {
+      fs.writeFileSync(`${outputdir}/${fileName}.csv`, outputData, {
+        encoding: 'utf-8',
+      });
+      console.log("ファイルが正常に保存されました");
+    } catch (error) {
+      console.log("ファイルの保存中にエラーが発生しました:", error);
+    }
+    //上の８行（try～）は toCsv(results, path.join(outputdir, fileName));で代用可
   } catch (error) {
     console.error(error);
   }
