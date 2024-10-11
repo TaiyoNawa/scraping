@@ -3,8 +3,6 @@ docker-compose build
 docker-compose run --rm app bash
 node src/workspace/... */
 
-//済　☆の評価が入っているときはtemp_div[]がずれるので、そこに対応できるようにする
-//ポイントがないやつとかそもそもnameとpriceしか書いていないやつもある
 //年齢確認ページを通り抜けられるようにする
 
 const { launchBrowser, displayLog } = require('./../../lib/browser');
@@ -13,7 +11,7 @@ const path = require('path');//パスの結合、解析、正規化などの操�
 const { stringify } = require('csv-stringify/sync');//CSV形式のデータを文字列に変換するモジュール
 const parse = require('csv-parse/sync');//CSV形式の文字列を解析してJavaScriptのオブジェクトに変換するためのモジュール
 const puppeteer = require('puppeteer');//headless:newにするためにとりあえずインポート
-const directoryName = "本の最新リリースランキング"//取得するものの名前
+const directoryName = "アダルト本の売れ筋ランキング"//取得するものの名前
 const outputdir = `my-output/Amazon/${directoryName}`;//scraping/　以降のパスを指定。
 //時間取得
 let currentDate = new Date().toLocaleString("ja-JP", { timeZone: "Asia/Tokyo" });//東京の時間を取得
@@ -45,8 +43,10 @@ let fileDate = `${year}-${month}-${date}-${hour}`;
       for (let i = 1; i <= 2; i++) {
         try {
           const page = await browser.newPage();
-          const URL = `https://www.amazon.co.jp/gp/new-releases/books/ref=zg_bsnr_pg_2_books?ie=UTF8&pg=${i}`
+          const URL = `https://www.amazon.co.jp/gp/bestsellers/books/10667101/ref=zg_bs_pg_${i}_books?ie=UTF8&pg=${i}`
           await page.goto(URL, { timeout: 10000 });
+          // スクリーンショットを撮影してファイルに保存
+          //await page.screenshot({ path: `${outputdir}/screenshot.png`, fullPage: true });
           try {
 
           //クラス名.data-loadedが表示されるまで待つ
@@ -58,22 +58,17 @@ let fileDate = `${year}-${month}-${date}-${hour}`;
             a = [...document.querySelectorAll("#gridItemRoot")]
 
             b = a.forEach(i => {
-                if(i.innerText == "この商品は取り扱っていません"){
-                  name = "取扱いなし"
-                  results.push({name})
-                  return;
-                }
-                temp = i.querySelector(".zg-grid-general-faceout div div:nth-child(2) div")
-                name = temp.querySelector("a").innerText
-                url = "https://www.amazon.co.jp" + temp.querySelector("a").getAttribute("href")
-                temp_div = temp.querySelectorAll(".a-row")
-                auther = temp.querySelector(".a-size-small.a-link-child")?.innerText || temp.querySelector(".a-size-small.a-color-base")?.innerText
-                category = temp.querySelector(".a-color-secondary").innerText || ""
-                price = temp_div[[...temp_div].length -2].innerText
-                point = temp_div[[...temp_div].length -1].innerText
-                review = temp.querySelector(".a-icon-row a") ? temp.querySelector(".a-icon-row a").getAttribute("title")?.replace("5つ星のうち","") + `(${temp.querySelector(".a-icon-row a .a-size-small")?.innerText})` : ""
-                if(name) results.push({name,auther,category,price,point,review,url})
-            });
+              temp = i.querySelector(".zg-grid-general-faceout div div:nth-child(2) div")
+              name = temp.querySelector("a").innerText
+              url = "https://www.amazon.co.jp" + temp.querySelector("a").getAttribute("href")
+              temp_div = temp.querySelectorAll(".a-row")
+              auther = temp.querySelector(".a-size-small.a-link-child")?.innerText || temp.querySelector(".a-size-small.a-color-base")?.innerText
+              category = temp.querySelector(".a-color-secondary").innerText || ""
+              price = temp_div[[...temp_div].length -2].innerText
+              point = temp_div[[...temp_div].length -1].innerText
+              review = temp.querySelector(".a-icon-row a") ? temp.querySelector(".a-icon-row a").getAttribute("title")?.replace("5つ星のうち","") + `(${temp.querySelector(".a-icon-row a .a-size-small")?.innerText})` : ""
+              if(name) results.push({name,url,auther,category,price,point,review})
+          });
             return results;
           }); // month変数を引数として渡す
           console.log(result)

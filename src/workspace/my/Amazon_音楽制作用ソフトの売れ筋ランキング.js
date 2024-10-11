@@ -3,9 +3,7 @@ docker-compose build
 docker-compose run --rm app bash
 node src/workspace/... */
 
-//済　☆の評価が入っているときはtemp_div[]がずれるので、そこに対応できるようにする
-//ポイントがないやつとかそもそもnameとpriceしか書いていないやつもある
-//年齢確認ページを通り抜けられるようにする
+//ポイントがないやつとかそもそもこの商品は取り扱っていませんと出るやつもある
 
 const { launchBrowser, displayLog } = require('./../../lib/browser');
 const fs = require('fs');//ファイル操作に関する関数を利用可能に
@@ -13,7 +11,7 @@ const path = require('path');//パスの結合、解析、正規化などの操�
 const { stringify } = require('csv-stringify/sync');//CSV形式のデータを文字列に変換するモジュール
 const parse = require('csv-parse/sync');//CSV形式の文字列を解析してJavaScriptのオブジェクトに変換するためのモジュール
 const puppeteer = require('puppeteer');//headless:newにするためにとりあえずインポート
-const directoryName = "本の最新リリースランキング"//取得するものの名前
+const directoryName = "音楽制作用ソフトの売れ筋ランキング"//取得するものの名前
 const outputdir = `my-output/Amazon/${directoryName}`;//scraping/　以降のパスを指定。
 //時間取得
 let currentDate = new Date().toLocaleString("ja-JP", { timeZone: "Asia/Tokyo" });//東京の時間を取得
@@ -45,7 +43,7 @@ let fileDate = `${year}-${month}-${date}-${hour}`;
       for (let i = 1; i <= 2; i++) {
         try {
           const page = await browser.newPage();
-          const URL = `https://www.amazon.co.jp/gp/new-releases/books/ref=zg_bsnr_pg_2_books?ie=UTF8&pg=${i}`
+          const URL = `https://www.amazon.co.jp/gp/bestsellers/software/2449118051/ref=zg_bs_pg_${i}_software?ie=UTF8&pg=${i}`
           await page.goto(URL, { timeout: 10000 });
           try {
 
@@ -59,9 +57,9 @@ let fileDate = `${year}-${month}-${date}-${hour}`;
 
             b = a.forEach(i => {
                 if(i.innerText == "この商品は取り扱っていません"){
-                  name = "取扱いなし"
-                  results.push({name})
-                  return;
+                    name = "取扱いなし"
+                    results.push({name})
+                    return;
                 }
                 temp = i.querySelector(".zg-grid-general-faceout div div:nth-child(2) div")
                 name = temp.querySelector("a").innerText
