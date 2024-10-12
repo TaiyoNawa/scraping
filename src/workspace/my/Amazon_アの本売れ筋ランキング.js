@@ -3,8 +3,6 @@ docker-compose build
 docker-compose run --rm app bash
 node src/workspace/... */
 
-//年齢確認ページを通り抜けられるようにする
-
 const { launchBrowser, displayLog } = require('./../../lib/browser');
 const fs = require('fs');//ファイル操作に関する関数を利用可能に
 const path = require('path');//パスの結合、解析、正規化などの操作が可能に
@@ -45,12 +43,18 @@ let fileDate = `${year}-${month}-${date}-${hour}`;
           const page = await browser.newPage();
           const URL = `https://www.amazon.co.jp/gp/bestsellers/books/10667101/ref=zg_bs_pg_${i}_books?ie=UTF8&pg=${i}`
           await page.goto(URL, { timeout: 10000 });
+
+          // 年齢確認ボタンをクリック
+          if(i == 1){
+            await page.waitForSelector('.a-button-text');
+            await page.click('.a-button-text');
+          }
           // スクリーンショットを撮影してファイルに保存
           //await page.screenshot({ path: `${outputdir}/screenshot.png`, fullPage: true });
           try {
 
-          //クラス名.data-loadedが表示されるまで待つ
-          // await page.waitForSelector('#gridItemRoot', {timeout: 6000});
+          // クラス名.data-loadedが表示されるまで待つ
+          await page.waitForSelector('#gridItemRoot', {timeout: 6000});
           // ページを最後までスクロール
           await autoScroll(page);
           const result = await page.evaluate(() => {
@@ -58,19 +62,32 @@ let fileDate = `${year}-${month}-${date}-${hour}`;
             a = [...document.querySelectorAll("#gridItemRoot")]
 
             b = a.forEach(i => {
-              temp = i.querySelector(".zg-grid-general-faceout div div:nth-child(2) div")
-              name = temp.querySelector("a").innerText
-              url = "https://www.amazon.co.jp" + temp.querySelector("a").getAttribute("href")
-              temp_div = temp.querySelectorAll(".a-row")
-              auther = temp.querySelector(".a-size-small.a-link-child")?.innerText || temp.querySelector(".a-size-small.a-color-base")?.innerText
-              category = temp.querySelector(".a-color-secondary").innerText || ""
-              price = temp_div[[...temp_div].length -2].innerText
-              point = temp_div[[...temp_div].length -1].innerText
-              review = temp.querySelector(".a-icon-row a") ? temp.querySelector(".a-icon-row a").getAttribute("title")?.replace("5つ星のうち","") + `(${temp.querySelector(".a-icon-row a .a-size-small")?.innerText})` : ""
-              if(name) results.push({name,url,auther,category,price,point,review})
-          });
+                if(i.innerText == "この商品は取り扱っていません"){
+                    name = "取扱いなし"
+                    results.push({name})
+                    return;
+                }
+                temp = i.querySelector(".zg-grid-general-faceout div div:nth-child(2) div")
+                name = temp.querySelector("a").innerText
+                url = "https://www.amazon.co.jp" + temp.querySelector("a").getAttribute("href")
+                auther = temp.querySelector(".a-size-small.a-link-child")?.innerText || temp.querySelector(".a-size-small.a-color-base")?.innerText
+                temp_category = temp.querySelectorAll(".a-color-secondary")
+                category = temp_category[0] ? temp_category[0].innerText : ""
+                note = ""
+                if(temp.querySelector(".a-color-secondary .p13n-sc-price") && temp_category.length == 1){
+                  note = category
+                  category = ""
+                }else if(temp_category.length == 2){
+                  note = temp_category[1]?.innerText || ""
+                }
+                temp_price = temp.querySelectorAll(".a-color-price")
+                price = temp_price[0] ? temp_price[0].innerText : ""
+                point = temp_price[1] ? temp_price[1].innerText : ""
+                review = temp.querySelector(".a-icon-row a") ? temp.querySelector(".a-icon-row a").getAttribute("title")?.replace("5つ星のうち","") + `(${temp.querySelector(".a-icon-row a .a-size-small")?.innerText})` : ""
+                if(name) results.push({name,auther,category,price,point,review,note,url})
+            });
             return results;
-          }); // month変数を引数として渡す
+          });
           console.log(result)
           all_results.push(...result);  // 配列を展開して結果を追加
         } catch (error) {
