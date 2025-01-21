@@ -1,9 +1,9 @@
 const axios = require('axios');
-const baseUrl = 'https://expo.bizcrew.jp/web_api/v2/booth/569/8881/249577';
+const baseUrl = 'https://expo.bizcrew.jp/web_api/v2/booth/569/12551/318261';
 //↑APIを叩く（リクエストするときのURL）
 const params = {
   params:
-    'category_ids=[]&booth_category_ids=[]&keyword=&type=Random&priority_live_stream_enable=0&page=1&per_page=201&is_list=1',
+    'category_ids=[]&booth_category_ids=[]&keyword=&type=Random&priority_live_stream_enable=0&page=1&per_page=200&is_list=1',
 };
 const toCSV = require('../../lib/generateCsv');
 const path = require('path');
@@ -35,17 +35,18 @@ const path = require('path');
   );
   // console.log(response.data.data)
   const items = response.data.data.data; //response.dataまではjsonで取得した全体のデータ。それ以降は表示されているbodyから探る。
+  console.log(items);
   const results = [];
   items.forEach((i) => {
     const url =
-      'https://expo.bizcrew.jp/event/8881/module/booth/249577/' + i.booth_id;
+      'https://expo.bizcrew.jp/event/12551/module/booth/318261/' + i.booth_id;
     const name = i.items[2].value?.replace(/tel:/g, '');
     const result = { name, url };
     results.push(result);
     console.log(name, url);
   });
 
-  toCSV(results, path.join('src/workspace/output', 'XR総合EXPO.csv'));
+  toCSV(results, path.join('output', 'Bizcrew2025.csv'));
 })();
 
 /* 
