@@ -17,7 +17,7 @@ const puppeteer = require('puppeteer'); //headless:newにするためにとり�
 (async () => {
   let browser;
   const data = await fs.readFileSync(
-    __dirname + '/../../../output/2025_◯◯_◯◯/〇〇URL.csv',
+    __dirname + '/../../../output/2025_03_31/NexTechWeek春URL.csv',
     'utf-8'
   );
   const records = parse.parse(data, {
@@ -183,7 +183,7 @@ const puppeteer = require('puppeteer'); //headless:newにするためにとり�
     }
 
     const outputData = stringify(results, { header: true });
-    fs.writeFileSync(`${outputdir}/2025_◯◯_◯◯/〇〇.csv`, outputData, {
+    fs.writeFileSync(`${outputdir}/2025_03_31/NexTechWeek春.csv`, outputData, {
       encoding: 'utf8',
     });
   } catch (error) {

@@ -11,13 +11,13 @@ const fs = require('fs'); //ファイル操作に関する関数を利用可能�
 const path = require('path'); //パスの結合、解析、正規化などの操作が可能に
 const { stringify } = require('csv-stringify/sync'); //CSV形式のデータを文字列に変換するモジュール
 const parse = require('csv-parse/sync'); //CSV形式の文字列を解析してJavaScriptのオブジェクトに変換するためのモジュール
-const outputdir = 'output';
+const outputdir = 'output/2025_03_18';
 const puppeteer = require('puppeteer'); //headless:newにするためにとりあえずインポート。使われてないように見えるが、launchBrowse()内では使用されている
 
 (async () => {
   let browser;
   const data = await fs.readFileSync(
-    __dirname + '/../../../output/2025_◯◯_◯◯/〇〇URL.csv',
+    __dirname + '/../../../output/2025_03_18/マーケティングWeek春URL.csv',
     'utf-8'
   );
   const records = parse.parse(data, {
@@ -81,7 +81,8 @@ const puppeteer = require('puppeteer'); //headless:newにするためにとり�
               if (j.querySelector('[data-dtm="exhibitorDetails_emailLink"]')) {
                 email = j
                   .querySelector('[data-dtm="exhibitorDetails_emailLink"]')
-                  ?.getAttribute('href');
+                  ?.getAttribute('href')
+                  .replace(/mailto:/g, '');
               }
               if (j.querySelector('[data-dtm="exhibitorDetails_phoneLink"]')) {
                 tel = j
@@ -183,7 +184,7 @@ const puppeteer = require('puppeteer'); //headless:newにするためにとり�
     }
 
     const outputData = stringify(results, { header: true });
-    fs.writeFileSync(`${outputdir}/2025_◯◯_◯◯/〇〇.csv`, outputData, {
+    fs.writeFileSync(`${outputdir}/マーケティングWeek春.csv`, outputData, {
       encoding: 'utf8',
     });
   } catch (error) {

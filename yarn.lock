@@ -33,6 +33,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@notionhq/client@npm:^3.0.1":
+  version: 3.0.1
+  resolution: "@notionhq/client@npm:3.0.1"
+  checksum: 10c0/441ff24aa2a3e40e78fd8e9259d33b3bf4006ad58fc4ce51029da149fafbef77ea0b9e63f6531bd37ce5e67527aac8fbe49e91d73cd7898e3c06d84bab280a61
+  languageName: node
+  linkType: hard
+
 "@puppeteer/browsers@npm:1.8.0":
   version: 1.8.0
   resolution: "@puppeteer/browsers@npm:1.8.0"
@@ -1468,6 +1475,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "scraping-sample@workspace:."
   dependencies:
+    "@notionhq/client": "npm:^3.0.1"
     axios: "npm:^1.7.7"
     cheerio: "npm:^1.0.0-rc.10"
     csv-parse: "npm:^5.0.4"
